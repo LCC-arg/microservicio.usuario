@@ -12,8 +12,8 @@ using infraestructure.Persistence;
 namespace infraestructure.Migrations
 {
     [DbContext(typeof(MicroservicioUsuarioContext))]
-    [Migration("20230504005825_init")]
-    partial class init
+    [Migration("20230506172324_modificaciones-tarjeta")]
+    partial class modificacionestarjeta
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,18 +27,17 @@ namespace infraestructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Tarjeta", b =>
                 {
-                    b.Property<int>("TarjetaId")
+                    b.Property<Guid>("TarjetaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TarjetaId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("EntidadTarjeta")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumeroTarjeta")
-                        .HasColumnType("int");
+                    b.Property<string>("NumeroTarjeta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoTarjeta")
                         .IsRequired()

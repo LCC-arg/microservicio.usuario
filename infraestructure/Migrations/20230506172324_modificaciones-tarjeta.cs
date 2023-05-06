@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class modificacionestarjeta : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,9 +34,8 @@ namespace infraestructure.Migrations
                 name: "Tarjeta",
                 columns: table => new
                 {
-                    TarjetaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NumeroTarjeta = table.Column<int>(type: "int", nullable: false),
+                    TarjetaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NumeroTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Vencimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EntidadTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: false),
