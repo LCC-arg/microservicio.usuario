@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.UseCase.Tarjetas;
 using Application.UseCase.Usuarios;
 using infraestructure.Persistence;
 using Infrastructure.Command;
@@ -30,6 +31,23 @@ namespace microservicio.usuario
             builder.Services.AddScoped<IUsuarioCommand, UsuarioCommand>();
             builder.Services.AddScoped<IUsuarioQuery, UsuarioQuery>();
 
+            //tarjeta
+            builder.Services.AddScoped<ITarjetaService, TarjetaService>();
+            builder.Services.AddScoped<ITarjetaCommand, TarjetaCommand>();
+            builder.Services.AddScoped<ITarjetaQuery, TarjetaQuery>();
+
+            //CORS deshabilitar
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -39,6 +57,7 @@ namespace microservicio.usuario
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

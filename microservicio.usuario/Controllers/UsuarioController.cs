@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Request;
+using Application.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace microservicio.usuario.Controllers
@@ -16,6 +17,7 @@ namespace microservicio.usuario.Controllers
         }
 
         [HttpGet("{usuarioId}")]
+        [ProducesResponseType(typeof(UsuarioResponse), 201)]
         public IActionResult GetUsuarioById(Guid usuarioId)
         {
             var result = _usuarioService.GetUsuarioById(usuarioId);
@@ -29,6 +31,7 @@ namespace microservicio.usuario.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(UsuarioResponse), 201)]
         public IActionResult CreateUsuario(UsuarioRequest request)
         {
             var result = _usuarioService.CreateUsuario(request);
@@ -36,6 +39,7 @@ namespace microservicio.usuario.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult UpdateUsuario(Guid usuarioId, UsuarioRequest request)
         {
             var result = _usuarioService.UpdateUsuario(usuarioId, request);
@@ -43,6 +47,7 @@ namespace microservicio.usuario.Controllers
         }
 
         [HttpDelete("{usuarioId}")]
+        [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult DeleteUsuario(Guid usuarioId)
         {
             var result = _usuarioService.RemoveUsuario(usuarioId);
