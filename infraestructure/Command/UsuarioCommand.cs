@@ -34,6 +34,11 @@ namespace Infrastructure.Command
             var updateUsuario = _context.Usuarios
             .FirstOrDefault(x => x.UsuarioId == usuarioId);
 
+            if (updateUsuario == null)
+            {
+                throw new InvalidDataException();
+            }
+
             updateUsuario.Nombre = request.Nombre;
             updateUsuario.Apellido = request.Apellido;
             updateUsuario.Dni = request.Dni;

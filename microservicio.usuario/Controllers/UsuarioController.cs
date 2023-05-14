@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Request;
 using Application.Response;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
@@ -71,8 +72,18 @@ namespace microservicio.usuario.Controllers
         [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult UpdateUsuario(Guid usuarioId, UsuarioRequest request)
         {
-            var result = _usuarioService.UpdateUsuario(usuarioId, request);
-            return new JsonResult(result);
+            UsuarioResponse result = null;
+
+            try
+            {
+                result = _usuarioService.UpdateUsuario(usuarioId, request);
+            }
+            catch (InvalidDataException e)
+            {
+                return new JsonResult(new BadRequest { message = "algun dato es incorrecto" }) { StatusCode = 400 };
+            }
+            
+            return new JsonResult(result) { StatusCode = 200};
         }
 
         /// <summary>
@@ -82,8 +93,15 @@ namespace microservicio.usuario.Controllers
         [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult DeleteUsuario(Guid usuarioId)
         {
-            var result = _usuarioService.RemoveUsuario(usuarioId);
-            return new JsonResult(result);
+            var exist =  _usuarioService.GetUsuarioById(usuarioId);
+
+            if (exist != null)
+            {
+                var result = _usuarioService.RemoveUsuario(usuarioId);
+                return new JsonResult(result) { StatusCode = 200};
+            }
+
+            return new JsonResult(new BadRequest { message = "ese usuario no existe" });
         }
     }
 }
