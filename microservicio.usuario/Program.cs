@@ -5,6 +5,8 @@ using infraestructure.Persistence;
 using Infrastructure.Command;
 using Infrastructure.Query;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace microservicio.usuario
 {
@@ -19,7 +21,24 @@ namespace microservicio.usuario
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1.0.0",
+                    Title = "microservicio.usuario",
+                    Description = "microservicio que gestiona los usuarios de la agencia de viajes",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Gabyx708",
+                        Url = new Uri("https://github.com/Gabyx708")
+                    }
+                });
+
+                //documentar swagger
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
 
 
             //custom

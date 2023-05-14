@@ -16,5 +16,8 @@ namespace infraestructure.Config
             entityBuilder.ToTable("Tarjeta");
             entityBuilder.HasKey(e => e.TarjetaId);
         }
+
+       
+        
     }
 }

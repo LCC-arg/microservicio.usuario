@@ -11,5 +11,7 @@ namespace Application.Interfaces
         TarjetaResponse UpdateTarjeta(Guid tarjetaId, TarjetaRequest tarjeta);
         List<Tarjeta> GetTarjetaList();
         TarjetaResponse GetTarjetaById(Guid tarjetaId);
+
+        TarjetasUsuarioResponse GetUsuarioTarjetas(Guid usuarioId);
     }
 }

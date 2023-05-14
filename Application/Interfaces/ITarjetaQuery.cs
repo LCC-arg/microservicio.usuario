@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Response;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Application.Interfaces
     {
         List<Tarjeta> GetTarjetaList();
         Tarjeta GetTarjetaById(Guid tarjetaId);
+        List<Tarjeta> GetTarjetasUser(Guid usuarioId);
     }
 }

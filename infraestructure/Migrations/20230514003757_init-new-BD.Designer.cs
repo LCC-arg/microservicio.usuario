@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using infraestructure.Persistence;
 
@@ -11,9 +12,11 @@ using infraestructure.Persistence;
 namespace infraestructure.Migrations
 {
     [DbContext(typeof(MicroservicioUsuarioContext))]
-    partial class MicroservicioUsuarioContextModelSnapshot : ModelSnapshot
+    [Migration("20230514003757_init-new-BD")]
+    partial class initnewBD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,44 +96,6 @@ namespace infraestructure.Migrations
                     b.HasKey("UsuarioId");
 
                     b.ToTable("Usuario", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UsuarioId = new Guid("db15a628-1320-4bee-83fc-1111f78783db"),
-                            Apellido = "Lopez",
-                            Dni = "343434",
-                            Domicilio = "su casa",
-                            Email = "test@gmail.com",
-                            FechaNac = new DateTime(2023, 5, 13, 21, 53, 35, 390, DateTimeKind.Local).AddTicks(4088),
-                            Nacionalidad = "peruano",
-                            Nombre = "Mariana",
-                            Telefono = "11234567"
-                        },
-                        new
-                        {
-                            UsuarioId = new Guid("1ea78b58-99fc-402c-91f7-4da4f9f56d08"),
-                            Apellido = "Cyrus",
-                            Dni = "343434",
-                            Domicilio = "su casa",
-                            Email = "test2@gmail.com",
-                            FechaNac = new DateTime(2023, 5, 13, 21, 53, 35, 390, DateTimeKind.Local).AddTicks(4099),
-                            Nacionalidad = "peruano",
-                            Nombre = "Luca",
-                            Telefono = "11234567"
-                        },
-                        new
-                        {
-                            UsuarioId = new Guid("5a95785b-3280-4f75-816c-4e6970013bfc"),
-                            Apellido = "Alba",
-                            Dni = "34656676",
-                            Domicilio = "su casa",
-                            Email = "test3@gmail.com",
-                            FechaNac = new DateTime(2023, 5, 13, 21, 53, 35, 390, DateTimeKind.Local).AddTicks(4103),
-                            Nacionalidad = "peruano",
-                            Nombre = "Juan",
-                            Telefono = "11234567"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Tarjeta", b =>

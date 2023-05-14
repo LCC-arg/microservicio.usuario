@@ -2,6 +2,7 @@
 using Application.Request;
 using Application.Response;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 
 namespace microservicio.usuario.Controllers
 {
@@ -16,11 +17,22 @@ namespace microservicio.usuario.Controllers
             _usuarioService = usuarioService;
         }
 
+
+        /// <summary>
+        /// devuelve un usuario
+        /// </summary>
         [HttpGet("{usuarioId}")]
         [ProducesResponseType(typeof(UsuarioResponse), 201)]
-        public IActionResult GetUsuarioById(Guid usuarioId)
+        public IActionResult GetUsuarioById(string usuarioId)
         {
-            var result = _usuarioService.GetUsuarioById(usuarioId);
+            Guid usuarioIdBuscar = new Guid();
+            
+            if (!Guid.TryParse(usuarioId, out usuarioIdBuscar))
+            {
+                return new JsonResult(new BadRequest { message = "el formato del id no es valido"});
+            }
+
+            var result = _usuarioService.GetUsuarioById(usuarioIdBuscar);
 
             if (result == null)
             {
@@ -30,14 +42,31 @@ namespace microservicio.usuario.Controllers
             return new JsonResult(result);
         }
 
+        /// <summary>
+        /// crea un usuario nuevo
+        /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(UsuarioResponse), 201)]
+        [ProducesResponseType(typeof(BadRequest), 400)]
         public IActionResult CreateUsuario(UsuarioRequest request)
         {
-            var result = _usuarioService.CreateUsuario(request);
+            UsuarioResponse result = null;
+
+            try
+            {
+                result = _usuarioService.CreateUsuario(request);
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new BadRequest { message = "algun campo no es valido" }) { StatusCode = 400};
+            }
+            
             return new JsonResult(result);
         }
 
+        /// <summary>
+        /// modifica un usuario existente
+        /// </summary>
         [HttpPut]
         [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult UpdateUsuario(Guid usuarioId, UsuarioRequest request)
@@ -46,6 +75,9 @@ namespace microservicio.usuario.Controllers
             return new JsonResult(result);
         }
 
+        /// <summary>
+        /// elimina un usuario existente
+        /// </summary>
         [HttpDelete("{usuarioId}")]
         [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult DeleteUsuario(Guid usuarioId)

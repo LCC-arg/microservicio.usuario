@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Response;
 using Domain.Entities;
 using infraestructure.Persistence;
 
@@ -22,6 +23,11 @@ namespace Infrastructure.Query
         {
             var listaTarjeta = _context.Tarjetas.OrderBy(fe => fe.TarjetaId).ToList();
             return listaTarjeta;
+        }
+
+        public List<Tarjeta> GetTarjetasUser(Guid usuarioId)
+        {
+            return _context.Tarjetas.Where(t => t.UsuarioId == usuarioId).ToList();
         }
     }
 }

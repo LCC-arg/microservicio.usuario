@@ -55,6 +55,41 @@ namespace Application.UseCase.Tarjetas
             return _query.GetTarjetaList();
         }
 
+        public TarjetasUsuarioResponse GetUsuarioTarjetas(Guid usuarioId)
+        {
+            List<Tarjeta> tarjetasMapear = _query.GetTarjetasUser(usuarioId);
+
+            if (_usuarioService.GetUsuarioById(usuarioId) == null)
+            {
+                return null;
+            }
+
+            List<TarjetaGetResponse> tarjetaGetResponses = new List<TarjetaGetResponse>();
+            
+
+            foreach (var tarjeta in tarjetasMapear)
+            {
+                var tarjetaResponse = new TarjetaGetResponse
+                {
+                    id = tarjeta.TarjetaId,
+                    NumeroTarjeta = tarjeta.NumeroTarjeta,
+                    TipoTarjeta = tarjeta.TipoTarjeta,
+                    Vencimiento = tarjeta.Vencimiento,
+                    EntidadTarjeta = tarjeta.EntidadTarjeta
+                    
+                };
+
+                tarjetaGetResponses.Add(tarjetaResponse);
+            }
+
+            return new TarjetasUsuarioResponse
+            {   
+                usuarioId = usuarioId,
+                nombre = _usuarioService.GetUsuarioById(usuarioId).Nombre,
+                tarjetasUsuario = tarjetaGetResponses
+            };
+        }
+
         public TarjetaResponse RemoveTarjeta(Guid tarjetaId)
         {
             var tarjeta = _command.RemoveTarjeta(tarjetaId);

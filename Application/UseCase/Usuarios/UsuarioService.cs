@@ -29,9 +29,12 @@ namespace Application.UseCase.Usuarios
                 Telefono = request.Telefono,
                 Dni = request.Dni
             };
-            _command.InsertUsuario(usuario);
+ 
+                _command.InsertUsuario(usuario);
+
             return new UsuarioResponse
-            {
+            {   
+                usuarioId = usuario.UsuarioId,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 Dni = usuario.Dni
@@ -45,7 +48,8 @@ namespace Application.UseCase.Usuarios
             if (usuario != null)
             {
                 return new UsuarioResponse
-                {
+                {   
+                    usuarioId = usuario.UsuarioId,
                     Nombre = usuario.Nombre,
                     Apellido = usuario.Apellido,
                     Dni = usuario.Dni
@@ -66,6 +70,7 @@ namespace Application.UseCase.Usuarios
 
             return new UsuarioResponse
             {
+                usuarioId = usuario.UsuarioId,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 Dni = usuario.Dni
@@ -77,7 +82,8 @@ namespace Application.UseCase.Usuarios
             var usuario = _command.UpdateUsuario(usuarioId, request);
 
             return new UsuarioResponse
-            {
+            {   
+                usuarioId = usuario.UsuarioId,
                 Nombre = usuario.Nombre,
                 Dni = usuario.Dni,
                 Apellido = usuario.Apellido,

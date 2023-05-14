@@ -23,8 +23,9 @@ namespace Infrastructure.Command
 
         public Tarjeta InsertTarjeta(Tarjeta tarjeta)
         {
+            
             _context.Add(tarjeta);
-            _context.SaveChanges();
+            _context.SaveChanges(); 
             return tarjeta;
         }
 

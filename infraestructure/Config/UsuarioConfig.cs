@@ -14,6 +14,50 @@ namespace infraestructure.Config
             entityBuilder.HasMany(m => m.Tarjetas)
            .WithOne(cm => cm.Usuario)
            .HasForeignKey(cm => cm.UsuarioId);
-        }
+
+
+
+            entityBuilder.HasData(
+
+                new Usuario
+                {   
+                    UsuarioId = Guid.NewGuid(),
+                    Nombre = "Mariana",
+                    Apellido = "Lopez",
+                    Dni = "343434",
+                    FechaNac = DateTime.Now,
+                    Email = "test@gmail.com",
+                    Nacionalidad = "peruano",
+                    Telefono = "11234567",
+                    Domicilio = "su casa"
+                },
+                new Usuario
+                {   
+                    UsuarioId = Guid.NewGuid(),
+                    Nombre = "Luca",
+                    Apellido = "Cyrus",
+                    Dni = "343434",
+                    FechaNac = DateTime.Now,
+                    Email = "test2@gmail.com",
+                    Nacionalidad = "peruano",
+                    Telefono = "11234567",
+                    Domicilio = "su casa"
+                },
+                new Usuario
+                {   
+                    UsuarioId = Guid.NewGuid(),
+                    Nombre = "Juan",
+                    Apellido = "Alba",
+                    Dni = "34656676",
+                    FechaNac = DateTime.Now,
+                    Email = "test3@gmail.com",
+                    Nacionalidad = "peruano",
+                    Telefono = "11234567",
+                    Domicilio = "su casa"
+                });
+
+            }   
+
+        
     }
 }
