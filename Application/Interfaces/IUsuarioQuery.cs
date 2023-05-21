@@ -7,5 +7,7 @@ namespace Application.Interfaces
         List<Usuario> GetUsuarioList();
 
         Usuario GetUsuarioById(Guid usuarioId);
+
+        Usuario UserLogin(string UserMail, string UserPassword);
     }
 }

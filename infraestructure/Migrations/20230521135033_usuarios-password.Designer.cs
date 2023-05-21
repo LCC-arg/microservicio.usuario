@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using infraestructure.Persistence;
 
@@ -11,9 +12,11 @@ using infraestructure.Persistence;
 namespace infraestructure.Migrations
 {
     [DbContext(typeof(MicroservicioUsuarioContext))]
-    partial class MicroservicioUsuarioContextModelSnapshot : ModelSnapshot
+    [Migration("20230521135033_usuarios-password")]
+    partial class usuariospassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

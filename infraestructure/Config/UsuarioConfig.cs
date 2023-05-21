@@ -1,6 +1,9 @@
-﻿using Domain.Entities;
+﻿using Application.Tools;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace infraestructure.Config
 {
@@ -20,7 +23,7 @@ namespace infraestructure.Config
             entityBuilder.HasData(
 
                 new Usuario
-                {   
+                {
                     UsuarioId = Guid.NewGuid(),
                     Nombre = "Mariana",
                     Apellido = "Lopez",
@@ -29,10 +32,11 @@ namespace infraestructure.Config
                     Email = "test@gmail.com",
                     Nacionalidad = "peruano",
                     Telefono = "11234567",
-                    Domicilio = "su casa"
+                    Domicilio = "su casa",
+                    Password = Encrypt.GetSHA256("casa")
                 },
                 new Usuario
-                {   
+                {
                     UsuarioId = Guid.NewGuid(),
                     Nombre = "Luca",
                     Apellido = "Cyrus",
@@ -41,10 +45,11 @@ namespace infraestructure.Config
                     Email = "test2@gmail.com",
                     Nacionalidad = "peruano",
                     Telefono = "11234567",
-                    Domicilio = "su casa"
+                    Domicilio = "su casa",
+                    Password = Encrypt.GetSHA256("bondiola")
                 },
                 new Usuario
-                {   
+                {
                     UsuarioId = Guid.NewGuid(),
                     Nombre = "Juan",
                     Apellido = "Alba",
@@ -53,8 +58,9 @@ namespace infraestructure.Config
                     Email = "test3@gmail.com",
                     Nacionalidad = "peruano",
                     Telefono = "11234567",
-                    Domicilio = "su casa"
-                });
+                    Domicilio = "su casa",
+                    Password = Encrypt.GetSHA256("unaj")
+                }) ;
 
             }   
 

@@ -1,7 +1,10 @@
-﻿using Application.Interfaces;
+﻿using Application.Common;
+using Application.Interfaces;
 using Application.Request;
 using Application.Response;
+using Application.Tools;
 using Domain.Entities;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Application.UseCase.Usuarios
 {
@@ -9,11 +12,29 @@ namespace Application.UseCase.Usuarios
     {
         private readonly IUsuarioCommand _command;
         private readonly IUsuarioQuery _query;
+        private readonly AppSettings _appSettings; //aqui esta el secreto
 
-        public UsuarioService(IUsuarioCommand command, IUsuarioQuery query)
+        public UsuarioService(IUsuarioCommand command, IUsuarioQuery query,IOptions<AppSettings> appSettings)
         {
             _command = command;
             _query = query;
+            _appSettings = appSettings;
+        }
+
+        public UsuarioResponse Authenticacion(UsuariLoginRequest request)
+        {
+            UsuarioResponse userLogged = new UsuarioResponse();
+
+            string password = Encrypt.GetSHA256(request.password);
+            var usuarioEncontrado = _query.UserLogin(request.email, password);
+
+            if (usuarioEncontrado == null) return null;
+
+            userLogged.usuarioId = usuarioEncontrado.UsuarioId;
+            userLogged.Dni = usuarioEncontrado.Dni;
+            userLogged.Token = "";
+
+            return userLogged;
         }
 
         public UsuarioResponse CreateUsuario(UsuarioRequest request)

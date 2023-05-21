@@ -13,6 +13,14 @@ namespace Infrastructure.Query
             _context = context;
         }
 
+        public Usuario UserLogin(string UserMail , string UserPassword)
+        {
+            var usuario = _context.Usuarios.Where(u => u.Email == UserMail && u.Password == UserPassword).FirstOrDefault();
+            if (usuario == null) { return null; }
+
+            return usuario;
+        }
+
         public Usuario GetUsuarioById(Guid usuarioId)
         {
             var usuario = _context.Usuarios.FirstOrDefault(x => x.UsuarioId == usuarioId);

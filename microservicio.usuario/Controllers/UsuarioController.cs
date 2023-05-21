@@ -19,6 +19,17 @@ namespace microservicio.usuario.Controllers
         }
 
 
+        [HttpPost("login")]
+        public IActionResult LoginAuth(UsuariLoginRequest userLogin)
+        {
+            var userResponse = _usuarioService.Authenticacion(userLogin);
+
+            if(userResponse == null) { return BadRequest(new BadRequest { message="usuario invalido"}); };
+
+            return Ok(userResponse);
+        }
+
+
         /// <summary>
         /// devuelve un usuario
         /// </summary>

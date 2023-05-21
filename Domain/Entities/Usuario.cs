@@ -12,6 +12,8 @@
         public string Telefono { get; set; }
         public string Domicilio { get; set; }
 
+        public string Password { get; set; }
+
         public ICollection<Tarjeta> Tarjetas { get; set; }
     }
 }
