@@ -1,10 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.Request;
 using Application.Response;
-using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace agencia_de_viajes.Controllers
 {
@@ -25,7 +23,7 @@ namespace agencia_de_viajes.Controllers
         /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(TarjetaResponse), 201)]
-        [ProducesResponseType(typeof(BadRequest), 404)]     
+        [ProducesResponseType(typeof(BadRequest), 404)]
         public IActionResult CreateTarjeta(TarjetaRequest request)
         {
             TarjetaResponse? result = null;
@@ -36,15 +34,15 @@ namespace agencia_de_viajes.Controllers
             }
             catch (Exception e)
             {
-                return new JsonResult(new BadRequest { message = "error al registrar la tarjeta" }) { StatusCode = 404};
+                return new JsonResult(new BadRequest { message = "error al registrar la tarjeta" }) { StatusCode = 404 };
             }
-            
-            
+
+
             if (result == null)
             {
                 return new JsonResult(new BadRequest { message = "no se creo la tarjeta" });
             }
-            
+
             return new JsonResult(result);
         }
 

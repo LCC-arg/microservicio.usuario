@@ -2,11 +2,13 @@
 using Application.Request;
 using Application.Response;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 
 namespace microservicio.usuario.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
@@ -33,6 +35,7 @@ namespace microservicio.usuario.Controllers
         /// <summary>
         /// devuelve un usuario
         /// </summary>
+        [Authorize]
         [HttpGet("{usuarioId}")]
         [ProducesResponseType(typeof(UsuarioResponse), 201)]
         public IActionResult GetUsuarioById(string usuarioId)
@@ -57,6 +60,7 @@ namespace microservicio.usuario.Controllers
         /// <summary>
         /// crea un usuario nuevo
         /// </summary>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(UsuarioResponse), 201)]
         [ProducesResponseType(typeof(BadRequest), 400)]
@@ -79,6 +83,7 @@ namespace microservicio.usuario.Controllers
         /// <summary>
         /// modifica un usuario existente
         /// </summary>
+        [Authorize]
         [HttpPut]
         [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult UpdateUsuario(Guid usuarioId, UsuarioRequest request)
@@ -100,6 +105,7 @@ namespace microservicio.usuario.Controllers
         /// <summary>
         /// elimina un usuario existente
         /// </summary>
+        [Authorize]
         [HttpDelete("{usuarioId}")]
         [ProducesResponseType(typeof(UsuarioResponse), 200)]
         public IActionResult DeleteUsuario(Guid usuarioId)

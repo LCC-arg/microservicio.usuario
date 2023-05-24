@@ -1,6 +1,7 @@
 using Application.Common;
 using Application.Interfaces;
 using Application.UseCase.Tarjetas;
+using Application.UseCase.Tokens;
 using Application.UseCase.Usuarios;
 using infraestructure.Persistence;
 using Infrastructure.Command;
@@ -75,27 +76,30 @@ namespace microservicio.usuario
             builder.Services.Configure<AppSettings>(appSettingsSection);
 
 
-            //jwt
+            //firma
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var firma = Encoding.ASCII.GetBytes(appSettings.Secreto);
+            var firma = appSettings.Secreto;
 
-            builder.Services.AddAuthentication(a =>
+            builder.Services.AddScoped<ITokenService, TokenService>(ServiceProvider =>
             {
-                a.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                a.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(d =>
-                {
-                    d.RequireHttpsMetadata = false;
-                    d.SaveToken = true;
-                    d.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(firma),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+                return new TokenService(firma);
+            });
+
+
+        //agregado servicio de token
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, jwtBearerOptions =>
+        {
+            jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+            {
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(appSettings.Secreto)
+                ),
+                ValidIssuer = "localhost",
+                ValidAudience = "usuarios",
+            };
+        });
+
 
             var app = builder.Build();
 

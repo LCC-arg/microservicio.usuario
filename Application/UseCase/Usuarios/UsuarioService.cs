@@ -12,16 +12,16 @@ namespace Application.UseCase.Usuarios
     {
         private readonly IUsuarioCommand _command;
         private readonly IUsuarioQuery _query;
-        private readonly AppSettings _appSettings; //aqui esta el secreto
+        private readonly ITokenService _tokenService;
 
-        public UsuarioService(IUsuarioCommand command, IUsuarioQuery query,IOptions<AppSettings> appSettings)
+        public UsuarioService(IUsuarioCommand command, IUsuarioQuery query, ITokenService tokenService)
         {
             _command = command;
             _query = query;
-            _appSettings = appSettings;
+            _tokenService = tokenService;
         }
 
-        public UsuarioResponse Authenticacion(UsuariLoginRequest request)
+        public string Authenticacion(UsuariLoginRequest request)
         {
             UsuarioResponse userLogged = new UsuarioResponse();
 
@@ -30,11 +30,7 @@ namespace Application.UseCase.Usuarios
 
             if (usuarioEncontrado == null) return null;
 
-            userLogged.usuarioId = usuarioEncontrado.UsuarioId;
-            userLogged.Dni = usuarioEncontrado.Dni;
-            userLogged.Token = "";
-
-            return userLogged;
+            return _tokenService.GenerateToken(usuarioEncontrado);
         }
 
         public UsuarioResponse CreateUsuario(UsuarioRequest request)
@@ -48,7 +44,8 @@ namespace Application.UseCase.Usuarios
                 FechaNac = request.FechaNac,
                 Nacionalidad = request.Nacionalidad,
                 Telefono = request.Telefono,
-                Dni = request.Dni
+                Dni = request.Dni,
+                Password = Encrypt.GetSHA256(request.Password)
             };
  
                 _command.InsertUsuario(usuario);
