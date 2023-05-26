@@ -60,7 +60,6 @@ namespace microservicio.usuario.Controllers
         /// <summary>
         /// crea un usuario nuevo
         /// </summary>
-        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(UsuarioResponse), 201)]
         [ProducesResponseType(typeof(BadRequest), 400)]
