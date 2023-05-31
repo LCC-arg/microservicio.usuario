@@ -6,7 +6,7 @@ namespace Application.Interfaces
 {
     public interface IUsuarioService
     {
-        string Authenticacion(UsuariLoginRequest request);
+        UsuarioTokenResponse Authenticacion(UsuariLoginRequest request);
         UsuarioResponse CreateUsuario(UsuarioRequest request);
         UsuarioResponse RemoveUsuario(Guid usuarioId);
         UsuarioResponse UpdateUsuario(Guid usuarioId, UsuarioRequest request);

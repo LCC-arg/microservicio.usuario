@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Request;
+using Application.Response;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -22,7 +23,7 @@ namespace Application.UseCase.Tokens
             _claveFirma = claveFirma;
         }
 
-        public string GenerateToken(Usuario userLogin)
+        public UsuarioTokenResponse GenerateToken(Usuario userLogin)
         {
 
             var header = new JwtHeader(
@@ -42,13 +43,18 @@ namespace Application.UseCase.Tokens
 
             var payload = new JwtPayload(claims) {
             // Agregar una fecha de expiración de 1 hora desde ahora
-            { "exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds() },
-            {"aud", "usuarios" },
+                { "exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds() },
+                {"aud", "usuarios" },
                 {"iss", "localhost" }
             };
 
             var token = new JwtSecurityToken(header, payload);
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenUsuairo = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new UsuarioTokenResponse
+            {
+                Token = tokenUsuairo
+            };
         }
     }
 }

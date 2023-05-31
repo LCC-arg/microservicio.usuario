@@ -21,7 +21,7 @@ namespace Application.UseCase.Usuarios
             _tokenService = tokenService;
         }
 
-        public string Authenticacion(UsuariLoginRequest request)
+        public UsuarioTokenResponse Authenticacion(UsuariLoginRequest request)
         {
             UsuarioResponse userLogged = new UsuarioResponse();
 
