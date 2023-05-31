@@ -22,6 +22,7 @@ namespace microservicio.usuario.Controllers
 
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(UsuarioTokenResponse), 200)]
         public IActionResult LoginAuth(UsuariLoginRequest userLogin)
         {
             var userResponse = _usuarioService.Authenticacion(userLogin);
