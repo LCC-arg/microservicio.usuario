@@ -4,6 +4,7 @@ using Application.Request;
 using Application.Response;
 using Application.Tools;
 using Domain.Entities;
+using Application.Exceptions;
 using Microsoft.VisualBasic.FileIO;
 
 namespace Application.UseCase.Usuarios
@@ -35,6 +36,19 @@ namespace Application.UseCase.Usuarios
 
         public UsuarioResponse CreateUsuario(UsuarioRequest request)
         {
+            string caracteresEspeciales = "!\"·$%&/()=¿¡?'_:;,|@#€*+.";
+            bool existenCaracteresEspeciales = (caracteresEspeciales.Intersect(request.Password).Count() > 0);
+
+            if (!existenCaracteresEspeciales)
+            {
+                throw new PasswordFormatException("la password requiere al menos un caracter especial");
+            }
+
+            if (request.Password.Length < 8)
+            {
+                throw new PasswordFormatException("la password requiere al menos 8 caracteres");
+            }
+
             var usuario = new Usuario
             {
                 Nombre = request.Nombre,

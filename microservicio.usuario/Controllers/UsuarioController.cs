@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Exceptions;
+using Application.Interfaces;
 using Application.Request;
 using Application.Response;
 using Domain.Entities;
@@ -72,9 +73,16 @@ namespace microservicio.usuario.Controllers
             {
                 result = _usuarioService.CreateUsuario(request);
             }
+            catch (ExistingMailException e) 
+            {
+                return new JsonResult(new BadRequest { message = e.Message }) { StatusCode = 409};
+            }catch(PasswordFormatException e)
+            {
+                return new JsonResult(new BadRequest { message = e.Message }) { StatusCode = 409 };
+            }
             catch (Exception e)
             {
-                return new JsonResult(new BadRequest { message = "algun campo no es valido" }) { StatusCode = 400};
+                return new JsonResult(new BadRequest { message = "puede que existan campos invalidos" }) { StatusCode = 400};
             }
             
             return new JsonResult(result);

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Request;
+using Application.Exceptions;
 using Domain.Entities;
 using infraestructure.Persistence;
 
@@ -15,7 +16,14 @@ namespace Infrastructure.Command
         }
 
         public Usuario InsertUsuario(Usuario usuario)
-        {
+        {   
+            var existMail = _context.Usuarios.FirstOrDefault(u => u.Email == usuario.Email);
+
+            if (existMail != null)
+            {
+                throw new ExistingMailException("ese mail ya ah sido utilizado");
+            }
+
             _context.Add(usuario);
             _context.SaveChanges();
             return usuario;
