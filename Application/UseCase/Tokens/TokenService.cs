@@ -53,6 +53,7 @@ namespace Application.UseCase.Tokens
 
             return new UsuarioTokenResponse
             {
+                UsuarioId = userLogin.UsuarioId,
                 Token = tokenUsuairo
             };
         }
