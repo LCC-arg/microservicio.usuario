@@ -1,6 +1,8 @@
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Request;
+using Application.Response;
+using Application.Tools;
 using Application.UseCase.Usuarios;
 using Domain.Entities;
 using FluentAssertions;
@@ -8,7 +10,7 @@ using Moq;
 
 namespace UnitTest
 {
-    public class UsuarioTest
+    public class UsuarioServiceTest
     {
         [Fact]
         public void TestCreateUsuario()
@@ -206,6 +208,150 @@ namespace UnitTest
             Assert.NotEqual(request.Apellido, result.Apellido);
             Assert.Equal(request.Dni, result.Dni);
         }
+
+
+        [Fact]
+        public void TestGetUsuarioList()
+        {
+            // ARRANGE
+            var mockCommand = new Mock<IUsuarioCommand>();
+            var mockQuery = new Mock<IUsuarioQuery>();
+            var mockTokenService = new Mock<ITokenService>();
+            var services = new UsuarioService(mockCommand.Object, mockQuery.Object, mockTokenService.Object);
+
+            // Crear una lista de usuarios ficticios
+            var usuariosLista = new List<Usuario>
+            {
+                 new Usuario { UsuarioId = new Guid(), Nombre = "Mario", Apellido = "Lopez" },
+                 new Usuario { UsuarioId = new Guid(), Nombre = "Miley", Apellido = "Ivarra" },
+            };
+
+
+            mockQuery.Setup(m => m.GetUsuarioList()).Returns(usuariosLista);
+
+            // ACT
+            var result = services.GetUsuarioList();
+
+            // ASSERT
+            int cantUsuarios = 2;
+            Assert.NotNull(result);
+            Assert.Equal(typeof(List<Usuario>), result.GetType());
+            Assert.Equal(cantUsuarios, result.Count());
+            Assert.Equal("Mario", result[0].Nombre);
+            Assert.Equal("Miley", result[1].Nombre);
+        }
+
+        [Fact]
+        public void TestRemoveUsuario()
+        {
+            // ARRANGE
+            var mockCommand = new Mock<IUsuarioCommand>();
+            var mockQuery = new Mock<IUsuarioQuery>();
+            var mockTokenService = new Mock<ITokenService>();
+            var services = new UsuarioService(mockCommand.Object, mockQuery.Object, mockTokenService.Object);
+
+            var usuarioId = new Guid();
+
+            var usuarioRemovido = new Usuario
+            {
+                UsuarioId = usuarioId,
+                Nombre = "Mario",
+                Apellido = "Lopez",
+                Dni = "43859853"
+            };
+
+            mockCommand.Setup(c => c.RemoveUsuario(It.IsAny<Guid>())).Returns(usuarioRemovido);
+
+
+            //ACT
+            var result = services.RemoveUsuario(usuarioId);
+
+
+            //ASSERT
+            result.Nombre.Should().Be(usuarioRemovido.Nombre);
+            result.usuarioId.Should().Be(usuarioRemovido.UsuarioId);
+            result.Apellido.Should().Be(usuarioRemovido.Apellido);
+            result.Dni.Should().Be(usuarioRemovido.Dni);
+
+        }
+
+        [Fact]
+        public void TestAuthenticacion()
+        {
+            // ARRANGE
+            var mockCommand = new Mock<IUsuarioCommand>();
+            var mockQuery = new Mock<IUsuarioQuery>();
+            var mockTokenService = new Mock<ITokenService>();
+            var services = new UsuarioService(mockCommand.Object, mockQuery.Object, mockTokenService.Object);
+
+            var request = new UsuariLoginRequest
+            {
+                email = "mariounaj@gmail.com",
+                password = "secretPassword123*"
+            };
+
+            var paaswordEncriptada = Encrypt.GetSHA256(request.password);
+
+            var usuarioEncontrado = new Usuario
+            {
+                UsuarioId = Guid.NewGuid(),
+                Nombre = "Mario",
+                Apellido = "Villalba",
+                Email = "test@example.com",
+                Password = paaswordEncriptada
+            };
+
+            mockQuery.Setup(m => m.UserLogin(request.email, paaswordEncriptada)).Returns(usuarioEncontrado);
+
+            var resultadoEsperado = new UsuarioTokenResponse
+            {
+                Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                UsuarioId = usuarioEncontrado.UsuarioId,
+
+            };
+
+            mockTokenService.Setup(m => m.GenerateToken(usuarioEncontrado)).Returns(resultadoEsperado);
+
+            // ACT
+            var result = services.Authenticacion(request);
+
+            // ASSERT
+            Assert.NotNull(result);
+            Assert.Equal(resultadoEsperado, result);
+            Assert.Equal(resultadoEsperado.UsuarioId,result.UsuarioId);
+        }
+
+
+
+        [Fact]
+        public void TestAutenticacionNula()
+        {
+            // ARRANGE
+            var mockCommand = new Mock<IUsuarioCommand>();
+            var mockQuery = new Mock<IUsuarioQuery>();
+            var mockTokenService = new Mock<ITokenService>();
+            var services = new UsuarioService(mockCommand.Object, mockQuery.Object, mockTokenService.Object);
+
+            var request = new UsuariLoginRequest
+            {
+                email = "pepito@gmail.com",
+                password = "secretPassword123*"
+            };
+
+            var paaswordEncriptada = Encrypt.GetSHA256(request.password);
+
+
+            mockQuery.Setup(m => m.UserLogin(request.email, paaswordEncriptada)).Returns((Usuario)null);
+
+
+            // ACT
+            var result = services.Authenticacion(request);
+
+            // ASSERT
+            Assert.Null(result);
+        }
+
+
 
     }
 }
