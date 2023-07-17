@@ -197,6 +197,30 @@ namespace UnitTest
             Assert.NotEqual(request.TipoTarjeta, result.EntidadTarjeta);
         }
 
+        [Fact]
+        public void TestGetUsuarioTarjetas()
+        {
+            //ARRANGE
+            var mockCommand = new Mock<ITarjetaCommand>();
+            var mockQuery = new Mock<ITarjetaQuery>();
+            var mockUsuarioService = new Mock<IUsuarioService>();
+            var services = new TarjetaService(mockCommand.Object,mockQuery.Object,mockUsuarioService.Object);
+
+            var usuarioId = new Guid();
+
+            var tarjetasMapear = new List<Tarjeta>
+            {
+                new Tarjeta{UsuarioId = usuarioId,TarjetaId = new Guid(),NumeroTarjeta="4458 4841 1584",TipoTarjeta="debito",Vencimiento=new DateTime(2029,12,1),EntidadTarjeta="visa"},
+                new Tarjeta{UsuarioId= usuarioId, TarjetaId = new Guid(),NumeroTarjeta="4448 4711 1507",TipoTarjeta="credito",Vencimiento=new DateTime(2028,10,1),EntidadTarjeta="visa"}
+            };
+
+            mockQuery.Setup(q => q.GetTarjetasUser(It.IsAny<Guid>())).Returns(tarjetasMapear);
+
+            //ACT
+            var result = services.GetTarjetaById(usuarioId);
+
+        }
+
 
 
     }
