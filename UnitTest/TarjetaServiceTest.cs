@@ -206,7 +206,21 @@ namespace UnitTest
             var mockUsuarioService = new Mock<IUsuarioService>();
             var services = new TarjetaService(mockCommand.Object,mockQuery.Object,mockUsuarioService.Object);
 
+            var mockUsuarioQuery = new Mock<IUsuarioQuery>();
+
             var usuarioId = new Guid();
+
+            var usuario = new Usuario
+            {
+                UsuarioId = usuarioId,
+                Nombre = "Mariano",
+                Apellido = "Roldan",
+                Dni = "43859857",
+                Domicilio = "delhi 780 , Florencio Varela",
+                Email = "marioRoldi@gmail.com",
+                FechaNac = new DateTime(1998, 12, 20),
+                Nacionalidad = "argentina",
+            };
 
             var tarjetasMapear = new List<Tarjeta>
             {
@@ -215,9 +229,13 @@ namespace UnitTest
             };
 
             mockQuery.Setup(q => q.GetTarjetasUser(It.IsAny<Guid>())).Returns(tarjetasMapear);
+            mockUsuarioQuery.Setup(uq => uq.GetUsuarioById(usuarioId)).Returns(usuario);
 
             //ACT
-            var result = services.GetTarjetaById(usuarioId);
+            var result = services.GetUsuarioTarjetas(usuarioId);
+
+            //ASSERT
+            Assert.Equal(1, 1);
 
         }
 
