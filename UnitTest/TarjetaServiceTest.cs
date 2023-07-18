@@ -154,6 +154,7 @@ namespace UnitTest
             Assert.Equal(tarjetaRemovida.EntidadTarjeta, result.EntidadTarjeta);
         }
 
+
         [Fact]
         public void TestUpdateTarjeta()
         {
@@ -176,7 +177,7 @@ namespace UnitTest
             };
 
             var tarjetaActualizada = new Tarjeta
-            {   
+            {
                 TarjetaId = tarjetaId,
                 NumeroTarjeta = "4456 4567 2345 4566",
                 TipoTarjeta = "credito",
@@ -204,7 +205,7 @@ namespace UnitTest
             var mockCommand = new Mock<ITarjetaCommand>();
             var mockQuery = new Mock<ITarjetaQuery>();
             var mockUsuarioService = new Mock<IUsuarioService>();
-            var services = new TarjetaService(mockCommand.Object,mockQuery.Object,mockUsuarioService.Object);
+            var services = new TarjetaService(mockCommand.Object, mockQuery.Object, mockUsuarioService.Object);
 
             var mockUsuarioQuery = new Mock<IUsuarioQuery>();
 
@@ -222,6 +223,14 @@ namespace UnitTest
                 Nacionalidad = "argentina",
             };
 
+            var usuarioResponse = new UsuarioResponse
+            {
+                Nombre = usuario.Nombre,
+                Dni = usuario.Dni,
+                Apellido = usuario.Email,
+                usuarioId = usuarioId,
+            };
+
             var tarjetasMapear = new List<Tarjeta>
             {
                 new Tarjeta{UsuarioId = usuarioId,TarjetaId = new Guid(),NumeroTarjeta="4458 4841 1584",TipoTarjeta="debito",Vencimiento=new DateTime(2029,12,1),EntidadTarjeta="visa"},
@@ -229,13 +238,71 @@ namespace UnitTest
             };
 
             mockQuery.Setup(q => q.GetTarjetasUser(It.IsAny<Guid>())).Returns(tarjetasMapear);
-            mockUsuarioQuery.Setup(uq => uq.GetUsuarioById(usuarioId)).Returns(usuario);
+            mockUsuarioService.Setup(us => us.GetUsuarioById(It.IsAny<Guid>())).Returns(usuarioResponse);
 
             //ACT
             var result = services.GetUsuarioTarjetas(usuarioId);
 
             //ASSERT
-            Assert.Equal(1, 1);
+            Assert.Equal(result.usuarioId, usuario.UsuarioId);
+            Assert.Equal(result.nombre, usuario.Nombre);
+
+            for (int i = 0; i < result.tarjetasUsuario.Count; i++)
+            {
+                Assert.Equal(tarjetasMapear[i].NumeroTarjeta, result.tarjetasUsuario[i].NumeroTarjeta);
+                Assert.Equal(tarjetasMapear[i].TipoTarjeta, result.tarjetasUsuario[i].TipoTarjeta);
+                Assert.Equal(tarjetasMapear[i].EntidadTarjeta, result.tarjetasUsuario[i].EntidadTarjeta);
+            }
+        }
+
+
+        [Fact]
+        public void TestGetUsuarioTarjetaNulo()
+        {
+            //ARRANGE
+            var mockCommand = new Mock<ITarjetaCommand>();
+            var mockQuery = new Mock<ITarjetaQuery>();
+            var mockUsuarioService = new Mock<IUsuarioService>();
+            var services = new TarjetaService(mockCommand.Object, mockQuery.Object, mockUsuarioService.Object);
+
+            var mockUsuarioQuery = new Mock<IUsuarioQuery>();
+
+            var usuarioId = new Guid();
+
+            var usuario = new Usuario
+            {
+                UsuarioId = usuarioId,
+                Nombre = "Mariano",
+                Apellido = "Roldan",
+                Dni = "43859857",
+                Domicilio = "delhi 780 , Florencio Varela",
+                Email = "marioRoldi@gmail.com",
+                FechaNac = new DateTime(1998, 12, 20),
+                Nacionalidad = "argentina",
+            };
+
+            var usuarioResponse = new UsuarioResponse
+            {
+                Nombre = usuario.Nombre,
+                Dni = usuario.Dni,
+                Apellido = usuario.Email,
+                usuarioId = usuarioId,
+            };
+
+            var tarjetasMapear = new List<Tarjeta>
+            {
+                new Tarjeta{UsuarioId = usuarioId,TarjetaId = new Guid(),NumeroTarjeta="4458 4841 1584",TipoTarjeta="debito",Vencimiento=new DateTime(2029,12,1),EntidadTarjeta="visa"},
+                new Tarjeta{UsuarioId= usuarioId, TarjetaId = new Guid(),NumeroTarjeta="4448 4711 1507",TipoTarjeta="credito",Vencimiento=new DateTime(2028,10,1),EntidadTarjeta="visa"}
+            };
+
+            mockQuery.Setup(q => q.GetTarjetasUser(It.IsAny<Guid>())).Returns((List<Tarjeta>)null);
+            mockUsuarioService.Setup(us => us.GetUsuarioById(It.IsAny<Guid>())).Returns((UsuarioResponse)null);
+
+            //ACT
+            var result = services.GetUsuarioTarjetas(usuarioId);
+
+            //ASSERT
+            Assert.Null(result);
 
         }
 
