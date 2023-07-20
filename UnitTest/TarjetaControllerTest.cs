@@ -60,6 +60,76 @@ namespace UnitTest
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public void TestGetTarjetaUserNulo()
+        {   
+            //ARRANGE
+            var mockTarjetaService = new Mock<ITarjetaService>();
+            var controller = new TarjetaController(mockTarjetaService.Object);
+
+            var usuarioId = Guid.NewGuid();
+            int expectedStatus = 404;
+            string expectedMessage = "no hemos encontrado nada";
+            mockTarjetaService.Setup(ts => ts.GetUsuarioTarjetas(It.IsAny<Guid>())).Returns((TarjetasUsuarioResponse)null);
+
+            //ACT
+            var result = controller.GetTarjetaUsuario(usuarioId.ToString());
+
+
+            //ASSERT
+            
+            Assert.IsType<JsonResult>(result);
+            var jsonResult = result as JsonResult;
+            var badRequest = jsonResult.Value as BadRequest;
+            Assert.NotNull(badRequest);
+            Assert.Equal(expectedStatus, jsonResult.StatusCode);
+            Assert.Equal(expectedMessage, badRequest.message);
+        }
+
+
+        [Fact]
+        public void TestGetTarjetaUsuarioIdInvalido()
+        {
+            //ARRANGE
+            var mockTarjetaService = new Mock<ITarjetaService>();
+            var controller = new TarjetaController(mockTarjetaService.Object);
+
+            string usuarioId = "formato incorrecto";
+            string expectedMessage = "el formato del id no es valido";
+
+            //ACT
+            var result = controller.GetTarjetaUsuario(usuarioId);
+
+            //ASSERT
+
+            Assert.IsType<JsonResult>(result);
+            var jsonResult = result as JsonResult;
+            var badRequest = jsonResult.Value as BadRequest;
+            Assert.Equal(expectedMessage, badRequest.message);
+
+        }
+
+
+        [Fact]
+        public void TestGetTarjetaUsuario()
+        {
+            // ARRANGE
+            var mockTarjetaService = new Mock<ITarjetaService>();
+            var controller = new TarjetaController(mockTarjetaService.Object);
+
+            var usuarioId = Guid.NewGuid();
+            var tarjetasUsuarioResponse = new TarjetasUsuarioResponse { /* Proporciona los datos necesarios para el objeto TarjetasUsuarioResponse */ };
+            mockTarjetaService.Setup(ts => ts.GetUsuarioTarjetas(usuarioId)).Returns(tarjetasUsuarioResponse);
+
+            // ACT
+            var result = controller.GetTarjetaUsuario(usuarioId.ToString());
+
+            // ASSERT
+            Assert.IsType<JsonResult>(result);
+            var jsonResult = result as JsonResult;
+            Assert.Equal(tarjetasUsuarioResponse, jsonResult.Value);
+        }
+
 
 
     }
