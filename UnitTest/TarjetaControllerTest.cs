@@ -118,7 +118,19 @@ namespace UnitTest
             var controller = new TarjetaController(mockTarjetaService.Object);
 
             var usuarioId = Guid.NewGuid();
-            var tarjetasUsuarioResponse = new TarjetasUsuarioResponse { /* Proporciona los datos necesarios para el objeto TarjetasUsuarioResponse */ };
+
+            var listaTarjetas = new List<TarjetaGetResponse>
+            {
+                new TarjetaGetResponse{id=Guid.NewGuid(),NumeroTarjeta ="4485 1502 1584 4951",Vencimiento= new DateTime(2029,12,1),EntidadTarjeta="visa"},
+                new TarjetaGetResponse{id=Guid.NewGuid(),NumeroTarjeta ="4780 1502 1584 0870",Vencimiento= new DateTime(2027,12,1),EntidadTarjeta="mastercard"}
+            };
+
+            var tarjetasUsuarioResponse = new TarjetasUsuarioResponse 
+            { 
+                usuarioId = usuarioId,
+                nombre = "Mario",
+                tarjetasUsuario = listaTarjetas
+            };
             mockTarjetaService.Setup(ts => ts.GetUsuarioTarjetas(usuarioId)).Returns(tarjetasUsuarioResponse);
 
             // ACT
@@ -128,6 +140,7 @@ namespace UnitTest
             Assert.IsType<JsonResult>(result);
             var jsonResult = result as JsonResult;
             Assert.Equal(tarjetasUsuarioResponse, jsonResult.Value);
+      
         }
 
 
