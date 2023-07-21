@@ -53,7 +53,7 @@ namespace microservicio.usuario.Controllers
 
             if (result == null)
             {
-                return NotFound(new { message = "No se encontraron Usuarios" });
+                return NotFound(new BadRequest { message = "No se encontraron Usuarios" });
             }
 
             return new JsonResult(result);
