@@ -15,14 +15,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTest
+namespace UnitTest.Test.ControllersTest.TarjetasControllerTest
 {
     public class TarjetaControllerTest
-    {   
+    {
         //crearTarjeta
 
         [Fact]
-        public void TestCreateTarjetaInService()
+        public void TestCreateTarjetaOk()
         {
             // Arrange
             var mockCommand = new Mock<ITarjetaCommand>();
@@ -44,7 +44,7 @@ namespace UnitTest
                 usuarioId = usuarioId
             };
 
-;
+            ;
             var usuarioFalso = new UsuarioResponse
             {
                 Nombre = "Miguel",
@@ -53,9 +53,9 @@ namespace UnitTest
                 usuarioId = usuarioId
             };
 
-          
+
             mockUsuarioService.Setup(us => us.GetUsuarioById(It.IsAny<Guid>())).Returns(usuarioFalso);
-           
+
 
             // Act
             var result = controller.CreateTarjeta(requestTarjeta);
@@ -68,7 +68,7 @@ namespace UnitTest
 
             Assert.Equal(response.NumeroTarjeta, requestTarjeta.NumeroTarjeta);
             Assert.Equal(response.EntidadTarjeta, requestTarjeta.EntidadTarjeta);
-    
+
 
             Assert.Equal(response.Usuario.Nombre, usuarioFalso.Nombre);
             Assert.Equal(response.Usuario.Apellido, usuarioFalso.Apellido);
@@ -137,7 +137,7 @@ namespace UnitTest
 
         [Fact]
         public void TestGetTarjetaUserNulo()
-        {   
+        {
             //ARRANGE
             var mockTarjetaService = new Mock<ITarjetaService>();
             var controller = new TarjetaController(mockTarjetaService.Object);
@@ -153,7 +153,7 @@ namespace UnitTest
 
 
             //ASSERT
-            
+
             Assert.IsType<JsonResult>(result);
             var jsonResult = result as JsonResult;
             var badRequest = jsonResult?.Value as BadRequest;
@@ -201,8 +201,8 @@ namespace UnitTest
                 new TarjetaGetResponse{id=Guid.NewGuid(),NumeroTarjeta ="4780 1502 1584 0870",Vencimiento= new DateTime(2027,12,1),EntidadTarjeta="mastercard"}
             };
 
-            var tarjetasUsuarioResponse = new TarjetasUsuarioResponse 
-            { 
+            var tarjetasUsuarioResponse = new TarjetasUsuarioResponse
+            {
                 usuarioId = usuarioId,
                 nombre = "Mario",
                 tarjetasUsuario = listaTarjetas
@@ -221,7 +221,7 @@ namespace UnitTest
             Assert.Equal(tarjetasUsuarioResponse.tarjetasUsuario, resultTarjetaResponse?.tarjetasUsuario);
             Assert.Equal(tarjetasUsuarioResponse.nombre, resultTarjetaResponse.nombre);
             Assert.Equal(tarjetasUsuarioResponse.usuarioId, resultTarjetaResponse.usuarioId);
-      
+
         }
 
 

@@ -12,13 +12,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTest
+namespace UnitTest.Test.UseCaseTest.TarjetasTest
 {
     public class TarjetaServiceTest
     {
 
         [Fact]
-        public void TestCreateTarjeta()
+        public void TestCreateTarjetaOk()
         {
             //ARRANGE
             var mockCommand = new Mock<ITarjetaCommand>();
@@ -59,7 +59,7 @@ namespace UnitTest
         }
 
         [Fact]
-        public void TestGetTarjeta()
+        public void TestGetTarjetaOk()
         {
             //ARRANGE
             var mockCommand = new Mock<ITarjetaCommand>();
@@ -131,7 +131,7 @@ namespace UnitTest
             var mockQuery = new Mock<ITarjetaQuery>();
             var mockCommand = new Mock<ITarjetaCommand>();
             var mockService = new Mock<IUsuarioService>();
-            var services = new TarjetaService(mockCommand.Object, mockQuery.Object ,mockService.Object);
+            var services = new TarjetaService(mockCommand.Object, mockQuery.Object, mockService.Object);
 
             var tarjetaId = new Guid();
 

@@ -84,7 +84,11 @@ namespace Application.UseCase.Usuarios
                     usuarioId = usuario.UsuarioId,
                     Nombre = usuario.Nombre,
                     Apellido = usuario.Apellido,
-                    Dni = usuario.Dni
+                    Dni = usuario.Dni,
+                    Email = usuario.Email,
+                    Telefono = usuario.Telefono,
+                    Domicilio = usuario.Domicilio,
+                    Nacionalidad = usuario.Nacionalidad
                 };
             }
             return null;

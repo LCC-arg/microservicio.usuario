@@ -8,7 +8,7 @@ using Domain.Entities;
 using FluentAssertions;
 using Moq;
 
-namespace UnitTest
+namespace UnitTest.Test.UseCaseTest.UsuariosTest
 {
     public class UsuarioServiceTest
     {
@@ -19,7 +19,7 @@ namespace UnitTest
             var mockCommand = new Mock<IUsuarioCommand>();
             var mockQuery = new Mock<IUsuarioQuery>();
             var mockTokenService = new Mock<ITokenService>();
-            var services = new UsuarioService(mockCommand.Object,mockQuery.Object,mockTokenService.Object);
+            var services = new UsuarioService(mockCommand.Object, mockQuery.Object, mockTokenService.Object);
 
             var request = new UsuarioRequest
             {
@@ -38,7 +38,7 @@ namespace UnitTest
             var result = services.CreateUsuario(request);
 
             //ASSERT
-          
+
             result.Nombre.Should().Be(request.Nombre);
             result.Apellido.Should().Be(request.Apellido);
             result.Dni.Should().Be(request.Dni);
@@ -70,7 +70,7 @@ namespace UnitTest
 
             //ACT
             //ASSERT
-            Assert.Throws<Exception>(()=> services.CreateUsuario(request));
+            Assert.Throws<Exception>(() => services.CreateUsuario(request));
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace UnitTest
             var mockTokenService = new Mock<ITokenService>();
             var services = new UsuarioService(mockCommand.Object, mockQuery.Object, mockTokenService.Object);
 
-            mockQuery.Setup(m => m.GetUsuarioById(It.IsAny<Guid>())).Returns((Usuario)null );
+            mockQuery.Setup(m => m.GetUsuarioById(It.IsAny<Guid>())).Returns((Usuario)null);
 
             //ACT
             var result = services.GetUsuarioById(new Guid());
@@ -318,7 +318,7 @@ namespace UnitTest
             // ASSERT
             Assert.NotNull(result);
             Assert.Equal(resultadoEsperado, result);
-            Assert.Equal(resultadoEsperado.UsuarioId,result.UsuarioId);
+            Assert.Equal(resultadoEsperado.UsuarioId, result.UsuarioId);
         }
 
 

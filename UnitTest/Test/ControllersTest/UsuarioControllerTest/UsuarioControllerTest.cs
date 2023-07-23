@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace UnitTest
+namespace UnitTest.Test.ControllersTest.UsuarioControllerTest
 {
     public class UsuarioControllerTest
     {
@@ -321,7 +321,7 @@ namespace UnitTest
             var mockUsuarioService = new Mock<IUsuarioService>();
             var controller = new UsuarioController(mockUsuarioService.Object);
 
-  
+
             var usuarioId = Guid.NewGuid();
             var usuarioExiste = new UsuarioResponse
             {
